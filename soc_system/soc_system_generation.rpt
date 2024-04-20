@@ -1,6 +1,6 @@
 Info: Starting: Create HDL design files for synthesis
-Info: qsys-generate /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2/soc_system.qsys --synthesis=VERILOG --output-directory=/homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2/soc_system/synthesis --family="Cyclone V" --part=5CSEMA5F31C6
-Progress: Loading project-hw2/soc_system.qsys
+Info: qsys-generate /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2-noram/soc_system.qsys --synthesis=VERILOG --output-directory=/homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2-noram/soc_system/synthesis --family="Cyclone V" --part=5CSEMA5F31C6
+Progress: Loading project-hw2-noram/soc_system.qsys
 Progress: Reading input file
 Progress: Adding audio_0 [audio 1.0]
 Progress: Parameterizing module audio_0
@@ -39,15 +39,15 @@ Info: audio_0_avalon_slave_0_agent_rsp_fifo: "mm_interconnect_0" instantiated al
 Info: router: "mm_interconnect_0" instantiated altera_merlin_router "router"
 Info: router_002: "mm_interconnect_0" instantiated altera_merlin_router "router_002"
 Info: audio_0_avalon_slave_0_burst_adapter: "mm_interconnect_0" instantiated altera_merlin_burst_adapter "audio_0_avalon_slave_0_burst_adapter"
-Info: Reusing file /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2/soc_system/synthesis/submodules/altera_merlin_address_alignment.sv
+Info: Reusing file /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2-noram/soc_system/synthesis/submodules/altera_merlin_address_alignment.sv
 Info: cmd_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "cmd_demux"
 Info: cmd_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "cmd_mux"
 Info: rsp_demux: "mm_interconnect_0" instantiated altera_merlin_demultiplexer "rsp_demux"
 Info: rsp_mux: "mm_interconnect_0" instantiated altera_merlin_multiplexer "rsp_mux"
-Info: Reusing file /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2/soc_system/synthesis/submodules/altera_merlin_arbitrator.sv
+Info: Reusing file /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2-noram/soc_system/synthesis/submodules/altera_merlin_arbitrator.sv
 Info: audio_0_avalon_slave_0_rsp_width_adapter: "mm_interconnect_0" instantiated altera_merlin_width_adapter "audio_0_avalon_slave_0_rsp_width_adapter"
-Info: Reusing file /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2/soc_system/synthesis/submodules/altera_merlin_address_alignment.sv
-Info: Reusing file /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2/soc_system/synthesis/submodules/altera_merlin_burst_uncompressor.sv
+Info: Reusing file /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2-noram/soc_system/synthesis/submodules/altera_merlin_address_alignment.sv
+Info: Reusing file /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw2-noram/soc_system/synthesis/submodules/altera_merlin_burst_uncompressor.sv
 Info: avalon_st_adapter: "mm_interconnect_0" instantiated altera_avalon_st_adapter "avalon_st_adapter"
 Info: border: "hps_io" instantiated altera_interface_generator "border"
 Info: error_adapter_0: "avalon_st_adapter" instantiated error_adapter "error_adapter_0"

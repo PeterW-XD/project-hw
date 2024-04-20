@@ -59,6 +59,7 @@ assign WS = clk_cnt[5];  // Flip at 31 cycle
  * One combinational logic for state change
  * IDLE -> LEFT -> RIGHT -> LEFT -> ...
  */
+
 always_comb begin
 	case (current)
 		IDLE: if (WS_d == 1 & WS == 0) next = LEFT;
@@ -86,13 +87,13 @@ always_ff @(negedge SCK) begin
 		current <= next;	// Assign next state
 		cnt <= cnt + 5'd1;// Period is 32
 		case (current)
-			LEFT: if (cnt < 25) begin
+			LEFT: if (cnt < 25 & cnt > 0) begin
 							left1 <= {left1[22:0], SD1};		// Left channel
 							left2 <= {left2[22:0], SD2};		// Left channel
 							left_pop <= 1'd0;
 						end else
 							left_pop <= 1'd1;
-			RIGHT: if (cnt < 25) begin
+			RIGHT: if (cnt < 25 & cnt > 0) begin
 							right1 <= {right1[22:0], SD1}; // Right channel
 							right2 <= {right2[22:0], SD2}; // Right channel
 							right_pop <= 1'd0;
@@ -105,6 +106,7 @@ always_ff @(negedge SCK) begin
 		endcase
 	end
 end
+
 
 always_ff @(posedge clk) begin
 	if (rst) begin
