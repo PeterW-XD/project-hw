@@ -11,9 +11,3 @@ Name state.00 state.10 state.01
 state.00 0 0 0 
 state.01 1 0 1 
 state.10 1 1 0 
-
-State Machine - |soc_system_top|soc_system:soc_system0|audio:audio_0|current
-Name current.IDLE current.RIGHT current.LEFT 
-current.IDLE 0 0 0 
-current.LEFT 1 0 1 
-current.RIGHT 1 1 0 

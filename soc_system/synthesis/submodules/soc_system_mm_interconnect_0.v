@@ -48,7 +48,7 @@ module soc_system_mm_interconnect_0 (
 		input  wire        hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset_reset, // hps_0_h2f_axi_master_agent_clk_reset_reset_bridge_in_reset.reset
 		output wire [2:0]  audio_0_avalon_slave_0_address,                                   //                                     audio_0_avalon_slave_0.address
 		output wire        audio_0_avalon_slave_0_read,                                      //                                                           .read
-		input  wire [31:0] audio_0_avalon_slave_0_readdata,                                  //                                                           .readdata
+		input  wire [15:0] audio_0_avalon_slave_0_readdata,                                  //                                                           .readdata
 		output wire        audio_0_avalon_slave_0_chipselect                                 //                                                           .chipselect
 	);
 
@@ -64,29 +64,29 @@ module soc_system_mm_interconnect_0 (
 	wire    [1:0] rsp_mux_001_src_channel;                                    // rsp_mux_001:src_channel -> hps_0_h2f_axi_master_agent:read_rp_channel
 	wire          rsp_mux_001_src_startofpacket;                              // rsp_mux_001:src_startofpacket -> hps_0_h2f_axi_master_agent:read_rp_startofpacket
 	wire          rsp_mux_001_src_endofpacket;                                // rsp_mux_001:src_endofpacket -> hps_0_h2f_axi_master_agent:read_rp_endofpacket
-	wire   [31:0] audio_0_avalon_slave_0_agent_m0_readdata;                   // audio_0_avalon_slave_0_translator:uav_readdata -> audio_0_avalon_slave_0_agent:m0_readdata
+	wire   [15:0] audio_0_avalon_slave_0_agent_m0_readdata;                   // audio_0_avalon_slave_0_translator:uav_readdata -> audio_0_avalon_slave_0_agent:m0_readdata
 	wire          audio_0_avalon_slave_0_agent_m0_waitrequest;                // audio_0_avalon_slave_0_translator:uav_waitrequest -> audio_0_avalon_slave_0_agent:m0_waitrequest
 	wire          audio_0_avalon_slave_0_agent_m0_debugaccess;                // audio_0_avalon_slave_0_agent:m0_debugaccess -> audio_0_avalon_slave_0_translator:uav_debugaccess
 	wire   [29:0] audio_0_avalon_slave_0_agent_m0_address;                    // audio_0_avalon_slave_0_agent:m0_address -> audio_0_avalon_slave_0_translator:uav_address
-	wire    [3:0] audio_0_avalon_slave_0_agent_m0_byteenable;                 // audio_0_avalon_slave_0_agent:m0_byteenable -> audio_0_avalon_slave_0_translator:uav_byteenable
+	wire    [1:0] audio_0_avalon_slave_0_agent_m0_byteenable;                 // audio_0_avalon_slave_0_agent:m0_byteenable -> audio_0_avalon_slave_0_translator:uav_byteenable
 	wire          audio_0_avalon_slave_0_agent_m0_read;                       // audio_0_avalon_slave_0_agent:m0_read -> audio_0_avalon_slave_0_translator:uav_read
 	wire          audio_0_avalon_slave_0_agent_m0_readdatavalid;              // audio_0_avalon_slave_0_translator:uav_readdatavalid -> audio_0_avalon_slave_0_agent:m0_readdatavalid
 	wire          audio_0_avalon_slave_0_agent_m0_lock;                       // audio_0_avalon_slave_0_agent:m0_lock -> audio_0_avalon_slave_0_translator:uav_lock
-	wire   [31:0] audio_0_avalon_slave_0_agent_m0_writedata;                  // audio_0_avalon_slave_0_agent:m0_writedata -> audio_0_avalon_slave_0_translator:uav_writedata
+	wire   [15:0] audio_0_avalon_slave_0_agent_m0_writedata;                  // audio_0_avalon_slave_0_agent:m0_writedata -> audio_0_avalon_slave_0_translator:uav_writedata
 	wire          audio_0_avalon_slave_0_agent_m0_write;                      // audio_0_avalon_slave_0_agent:m0_write -> audio_0_avalon_slave_0_translator:uav_write
-	wire    [2:0] audio_0_avalon_slave_0_agent_m0_burstcount;                 // audio_0_avalon_slave_0_agent:m0_burstcount -> audio_0_avalon_slave_0_translator:uav_burstcount
+	wire    [1:0] audio_0_avalon_slave_0_agent_m0_burstcount;                 // audio_0_avalon_slave_0_agent:m0_burstcount -> audio_0_avalon_slave_0_translator:uav_burstcount
 	wire          audio_0_avalon_slave_0_agent_rf_source_valid;               // audio_0_avalon_slave_0_agent:rf_source_valid -> audio_0_avalon_slave_0_agent_rsp_fifo:in_valid
-	wire  [123:0] audio_0_avalon_slave_0_agent_rf_source_data;                // audio_0_avalon_slave_0_agent:rf_source_data -> audio_0_avalon_slave_0_agent_rsp_fifo:in_data
+	wire  [105:0] audio_0_avalon_slave_0_agent_rf_source_data;                // audio_0_avalon_slave_0_agent:rf_source_data -> audio_0_avalon_slave_0_agent_rsp_fifo:in_data
 	wire          audio_0_avalon_slave_0_agent_rf_source_ready;               // audio_0_avalon_slave_0_agent_rsp_fifo:in_ready -> audio_0_avalon_slave_0_agent:rf_source_ready
 	wire          audio_0_avalon_slave_0_agent_rf_source_startofpacket;       // audio_0_avalon_slave_0_agent:rf_source_startofpacket -> audio_0_avalon_slave_0_agent_rsp_fifo:in_startofpacket
 	wire          audio_0_avalon_slave_0_agent_rf_source_endofpacket;         // audio_0_avalon_slave_0_agent:rf_source_endofpacket -> audio_0_avalon_slave_0_agent_rsp_fifo:in_endofpacket
 	wire          audio_0_avalon_slave_0_agent_rsp_fifo_out_valid;            // audio_0_avalon_slave_0_agent_rsp_fifo:out_valid -> audio_0_avalon_slave_0_agent:rf_sink_valid
-	wire  [123:0] audio_0_avalon_slave_0_agent_rsp_fifo_out_data;             // audio_0_avalon_slave_0_agent_rsp_fifo:out_data -> audio_0_avalon_slave_0_agent:rf_sink_data
+	wire  [105:0] audio_0_avalon_slave_0_agent_rsp_fifo_out_data;             // audio_0_avalon_slave_0_agent_rsp_fifo:out_data -> audio_0_avalon_slave_0_agent:rf_sink_data
 	wire          audio_0_avalon_slave_0_agent_rsp_fifo_out_ready;            // audio_0_avalon_slave_0_agent:rf_sink_ready -> audio_0_avalon_slave_0_agent_rsp_fifo:out_ready
 	wire          audio_0_avalon_slave_0_agent_rsp_fifo_out_startofpacket;    // audio_0_avalon_slave_0_agent_rsp_fifo:out_startofpacket -> audio_0_avalon_slave_0_agent:rf_sink_startofpacket
 	wire          audio_0_avalon_slave_0_agent_rsp_fifo_out_endofpacket;      // audio_0_avalon_slave_0_agent_rsp_fifo:out_endofpacket -> audio_0_avalon_slave_0_agent:rf_sink_endofpacket
 	wire          audio_0_avalon_slave_0_agent_rdata_fifo_src_valid;          // audio_0_avalon_slave_0_agent:rdata_fifo_src_valid -> audio_0_avalon_slave_0_agent_rdata_fifo:in_valid
-	wire   [33:0] audio_0_avalon_slave_0_agent_rdata_fifo_src_data;           // audio_0_avalon_slave_0_agent:rdata_fifo_src_data -> audio_0_avalon_slave_0_agent_rdata_fifo:in_data
+	wire   [17:0] audio_0_avalon_slave_0_agent_rdata_fifo_src_data;           // audio_0_avalon_slave_0_agent:rdata_fifo_src_data -> audio_0_avalon_slave_0_agent_rdata_fifo:in_data
 	wire          audio_0_avalon_slave_0_agent_rdata_fifo_src_ready;          // audio_0_avalon_slave_0_agent_rdata_fifo:in_ready -> audio_0_avalon_slave_0_agent:rdata_fifo_src_ready
 	wire          hps_0_h2f_axi_master_agent_write_cp_valid;                  // hps_0_h2f_axi_master_agent:write_cp_valid -> router:sink_valid
 	wire  [158:0] hps_0_h2f_axi_master_agent_write_cp_data;                   // hps_0_h2f_axi_master_agent:write_cp_data -> router:sink_data
@@ -111,12 +111,12 @@ module soc_system_mm_interconnect_0 (
 	wire          router_001_src_startofpacket;                               // router_001:src_startofpacket -> cmd_demux_001:sink_startofpacket
 	wire          router_001_src_endofpacket;                                 // router_001:src_endofpacket -> cmd_demux_001:sink_endofpacket
 	wire          audio_0_avalon_slave_0_agent_rp_valid;                      // audio_0_avalon_slave_0_agent:rp_valid -> router_002:sink_valid
-	wire  [122:0] audio_0_avalon_slave_0_agent_rp_data;                       // audio_0_avalon_slave_0_agent:rp_data -> router_002:sink_data
+	wire  [104:0] audio_0_avalon_slave_0_agent_rp_data;                       // audio_0_avalon_slave_0_agent:rp_data -> router_002:sink_data
 	wire          audio_0_avalon_slave_0_agent_rp_ready;                      // router_002:sink_ready -> audio_0_avalon_slave_0_agent:rp_ready
 	wire          audio_0_avalon_slave_0_agent_rp_startofpacket;              // audio_0_avalon_slave_0_agent:rp_startofpacket -> router_002:sink_startofpacket
 	wire          audio_0_avalon_slave_0_agent_rp_endofpacket;                // audio_0_avalon_slave_0_agent:rp_endofpacket -> router_002:sink_endofpacket
 	wire          audio_0_avalon_slave_0_burst_adapter_source0_valid;         // audio_0_avalon_slave_0_burst_adapter:source0_valid -> audio_0_avalon_slave_0_agent:cp_valid
-	wire  [122:0] audio_0_avalon_slave_0_burst_adapter_source0_data;          // audio_0_avalon_slave_0_burst_adapter:source0_data -> audio_0_avalon_slave_0_agent:cp_data
+	wire  [104:0] audio_0_avalon_slave_0_burst_adapter_source0_data;          // audio_0_avalon_slave_0_burst_adapter:source0_data -> audio_0_avalon_slave_0_agent:cp_data
 	wire          audio_0_avalon_slave_0_burst_adapter_source0_ready;         // audio_0_avalon_slave_0_agent:cp_ready -> audio_0_avalon_slave_0_burst_adapter:source0_ready
 	wire    [1:0] audio_0_avalon_slave_0_burst_adapter_source0_channel;       // audio_0_avalon_slave_0_burst_adapter:source0_channel -> audio_0_avalon_slave_0_agent:cp_channel
 	wire          audio_0_avalon_slave_0_burst_adapter_source0_startofpacket; // audio_0_avalon_slave_0_burst_adapter:source0_startofpacket -> audio_0_avalon_slave_0_agent:cp_startofpacket
@@ -146,7 +146,7 @@ module soc_system_mm_interconnect_0 (
 	wire          rsp_demux_src1_startofpacket;                               // rsp_demux:src1_startofpacket -> rsp_mux_001:sink0_startofpacket
 	wire          rsp_demux_src1_endofpacket;                                 // rsp_demux:src1_endofpacket -> rsp_mux_001:sink0_endofpacket
 	wire          router_002_src_valid;                                       // router_002:src_valid -> audio_0_avalon_slave_0_rsp_width_adapter:in_valid
-	wire  [122:0] router_002_src_data;                                        // router_002:src_data -> audio_0_avalon_slave_0_rsp_width_adapter:in_data
+	wire  [104:0] router_002_src_data;                                        // router_002:src_data -> audio_0_avalon_slave_0_rsp_width_adapter:in_data
 	wire          router_002_src_ready;                                       // audio_0_avalon_slave_0_rsp_width_adapter:in_ready -> router_002:src_ready
 	wire    [1:0] router_002_src_channel;                                     // router_002:src_channel -> audio_0_avalon_slave_0_rsp_width_adapter:in_channel
 	wire          router_002_src_startofpacket;                               // router_002:src_startofpacket -> audio_0_avalon_slave_0_rsp_width_adapter:in_startofpacket
@@ -164,35 +164,35 @@ module soc_system_mm_interconnect_0 (
 	wire          cmd_mux_src_startofpacket;                                  // cmd_mux:src_startofpacket -> audio_0_avalon_slave_0_cmd_width_adapter:in_startofpacket
 	wire          cmd_mux_src_endofpacket;                                    // cmd_mux:src_endofpacket -> audio_0_avalon_slave_0_cmd_width_adapter:in_endofpacket
 	wire          audio_0_avalon_slave_0_cmd_width_adapter_src_valid;         // audio_0_avalon_slave_0_cmd_width_adapter:out_valid -> audio_0_avalon_slave_0_burst_adapter:sink0_valid
-	wire  [122:0] audio_0_avalon_slave_0_cmd_width_adapter_src_data;          // audio_0_avalon_slave_0_cmd_width_adapter:out_data -> audio_0_avalon_slave_0_burst_adapter:sink0_data
+	wire  [104:0] audio_0_avalon_slave_0_cmd_width_adapter_src_data;          // audio_0_avalon_slave_0_cmd_width_adapter:out_data -> audio_0_avalon_slave_0_burst_adapter:sink0_data
 	wire          audio_0_avalon_slave_0_cmd_width_adapter_src_ready;         // audio_0_avalon_slave_0_burst_adapter:sink0_ready -> audio_0_avalon_slave_0_cmd_width_adapter:out_ready
 	wire    [1:0] audio_0_avalon_slave_0_cmd_width_adapter_src_channel;       // audio_0_avalon_slave_0_cmd_width_adapter:out_channel -> audio_0_avalon_slave_0_burst_adapter:sink0_channel
 	wire          audio_0_avalon_slave_0_cmd_width_adapter_src_startofpacket; // audio_0_avalon_slave_0_cmd_width_adapter:out_startofpacket -> audio_0_avalon_slave_0_burst_adapter:sink0_startofpacket
 	wire          audio_0_avalon_slave_0_cmd_width_adapter_src_endofpacket;   // audio_0_avalon_slave_0_cmd_width_adapter:out_endofpacket -> audio_0_avalon_slave_0_burst_adapter:sink0_endofpacket
 	wire          audio_0_avalon_slave_0_agent_rdata_fifo_out_valid;          // audio_0_avalon_slave_0_agent_rdata_fifo:out_valid -> avalon_st_adapter:in_0_valid
-	wire   [33:0] audio_0_avalon_slave_0_agent_rdata_fifo_out_data;           // audio_0_avalon_slave_0_agent_rdata_fifo:out_data -> avalon_st_adapter:in_0_data
+	wire   [17:0] audio_0_avalon_slave_0_agent_rdata_fifo_out_data;           // audio_0_avalon_slave_0_agent_rdata_fifo:out_data -> avalon_st_adapter:in_0_data
 	wire          audio_0_avalon_slave_0_agent_rdata_fifo_out_ready;          // avalon_st_adapter:in_0_ready -> audio_0_avalon_slave_0_agent_rdata_fifo:out_ready
 	wire          avalon_st_adapter_out_0_valid;                              // avalon_st_adapter:out_0_valid -> audio_0_avalon_slave_0_agent:rdata_fifo_sink_valid
-	wire   [33:0] avalon_st_adapter_out_0_data;                               // avalon_st_adapter:out_0_data -> audio_0_avalon_slave_0_agent:rdata_fifo_sink_data
+	wire   [17:0] avalon_st_adapter_out_0_data;                               // avalon_st_adapter:out_0_data -> audio_0_avalon_slave_0_agent:rdata_fifo_sink_data
 	wire          avalon_st_adapter_out_0_ready;                              // audio_0_avalon_slave_0_agent:rdata_fifo_sink_ready -> avalon_st_adapter:out_0_ready
 	wire    [0:0] avalon_st_adapter_out_0_error;                              // avalon_st_adapter:out_0_error -> audio_0_avalon_slave_0_agent:rdata_fifo_sink_error
 
 	altera_merlin_slave_translator #(
 		.AV_ADDRESS_W                   (3),
-		.AV_DATA_W                      (32),
-		.UAV_DATA_W                     (32),
+		.AV_DATA_W                      (16),
+		.UAV_DATA_W                     (16),
 		.AV_BURSTCOUNT_W                (1),
-		.AV_BYTEENABLE_W                (4),
-		.UAV_BYTEENABLE_W               (4),
+		.AV_BYTEENABLE_W                (2),
+		.UAV_BYTEENABLE_W               (2),
 		.UAV_ADDRESS_W                  (30),
-		.UAV_BURSTCOUNT_W               (3),
+		.UAV_BURSTCOUNT_W               (2),
 		.AV_READLATENCY                 (0),
 		.USE_READDATAVALID              (0),
 		.USE_WAITREQUEST                (0),
 		.USE_UAV_CLKEN                  (0),
 		.USE_READRESPONSE               (0),
 		.USE_WRITERESPONSE              (0),
-		.AV_SYMBOLS_PER_WORD            (4),
+		.AV_SYMBOLS_PER_WORD            (2),
 		.AV_ADDRESS_SYMBOLS             (0),
 		.AV_BURSTCOUNT_SYMBOLS          (0),
 		.AV_CONSTANT_BURST_BEHAVIOR     (0),
@@ -370,38 +370,38 @@ module soc_system_mm_interconnect_0 (
 	);
 
 	altera_merlin_slave_agent #(
-		.PKT_ORI_BURST_SIZE_H      (122),
-		.PKT_ORI_BURST_SIZE_L      (120),
-		.PKT_RESPONSE_STATUS_H     (119),
-		.PKT_RESPONSE_STATUS_L     (118),
-		.PKT_BURST_SIZE_H          (90),
-		.PKT_BURST_SIZE_L          (88),
-		.PKT_TRANS_LOCK            (70),
-		.PKT_BEGIN_BURST           (95),
-		.PKT_PROTECTION_H          (113),
-		.PKT_PROTECTION_L          (111),
-		.PKT_BURSTWRAP_H           (87),
-		.PKT_BURSTWRAP_L           (80),
-		.PKT_BYTE_CNT_H            (79),
-		.PKT_BYTE_CNT_L            (72),
-		.PKT_ADDR_H                (65),
-		.PKT_ADDR_L                (36),
-		.PKT_TRANS_COMPRESSED_READ (66),
-		.PKT_TRANS_POSTED          (67),
-		.PKT_TRANS_WRITE           (68),
-		.PKT_TRANS_READ            (69),
-		.PKT_DATA_H                (31),
+		.PKT_ORI_BURST_SIZE_H      (104),
+		.PKT_ORI_BURST_SIZE_L      (102),
+		.PKT_RESPONSE_STATUS_H     (101),
+		.PKT_RESPONSE_STATUS_L     (100),
+		.PKT_BURST_SIZE_H          (72),
+		.PKT_BURST_SIZE_L          (70),
+		.PKT_TRANS_LOCK            (52),
+		.PKT_BEGIN_BURST           (77),
+		.PKT_PROTECTION_H          (95),
+		.PKT_PROTECTION_L          (93),
+		.PKT_BURSTWRAP_H           (69),
+		.PKT_BURSTWRAP_L           (62),
+		.PKT_BYTE_CNT_H            (61),
+		.PKT_BYTE_CNT_L            (54),
+		.PKT_ADDR_H                (47),
+		.PKT_ADDR_L                (18),
+		.PKT_TRANS_COMPRESSED_READ (48),
+		.PKT_TRANS_POSTED          (49),
+		.PKT_TRANS_WRITE           (50),
+		.PKT_TRANS_READ            (51),
+		.PKT_DATA_H                (15),
 		.PKT_DATA_L                (0),
-		.PKT_BYTEEN_H              (35),
-		.PKT_BYTEEN_L              (32),
-		.PKT_SRC_ID_H              (97),
-		.PKT_SRC_ID_L              (97),
-		.PKT_DEST_ID_H             (98),
-		.PKT_DEST_ID_L             (98),
+		.PKT_BYTEEN_H              (17),
+		.PKT_BYTEEN_L              (16),
+		.PKT_SRC_ID_H              (79),
+		.PKT_SRC_ID_L              (79),
+		.PKT_DEST_ID_H             (80),
+		.PKT_DEST_ID_L             (80),
 		.PKT_SYMBOL_W              (8),
 		.ST_CHANNEL_W              (2),
-		.ST_DATA_W                 (123),
-		.AVS_BURSTCOUNT_W          (3),
+		.ST_DATA_W                 (105),
+		.AVS_BURSTCOUNT_W          (2),
 		.SUPPRESS_0_BYTEEN_CMD     (1),
 		.PREVENT_FIFO_OVERFLOW     (1),
 		.USE_READRESPONSE          (0),
@@ -455,7 +455,7 @@ module soc_system_mm_interconnect_0 (
 
 	altera_avalon_sc_fifo #(
 		.SYMBOLS_PER_BEAT    (1),
-		.BITS_PER_SYMBOL     (124),
+		.BITS_PER_SYMBOL     (106),
 		.FIFO_DEPTH          (2),
 		.CHANNEL_WIDTH       (0),
 		.ERROR_WIDTH         (0),
@@ -496,7 +496,7 @@ module soc_system_mm_interconnect_0 (
 
 	altera_avalon_sc_fifo #(
 		.SYMBOLS_PER_BEAT    (1),
-		.BITS_PER_SYMBOL     (34),
+		.BITS_PER_SYMBOL     (18),
 		.FIFO_DEPTH          (2),
 		.CHANNEL_WIDTH       (0),
 		.ERROR_WIDTH         (0),
@@ -584,30 +584,30 @@ module soc_system_mm_interconnect_0 (
 	);
 
 	altera_merlin_burst_adapter #(
-		.PKT_ADDR_H                (65),
-		.PKT_ADDR_L                (36),
-		.PKT_BEGIN_BURST           (95),
-		.PKT_BYTE_CNT_H            (79),
-		.PKT_BYTE_CNT_L            (72),
-		.PKT_BYTEEN_H              (35),
-		.PKT_BYTEEN_L              (32),
-		.PKT_BURST_SIZE_H          (90),
-		.PKT_BURST_SIZE_L          (88),
-		.PKT_BURST_TYPE_H          (92),
-		.PKT_BURST_TYPE_L          (91),
-		.PKT_BURSTWRAP_H           (87),
-		.PKT_BURSTWRAP_L           (80),
-		.PKT_TRANS_COMPRESSED_READ (66),
-		.PKT_TRANS_WRITE           (68),
-		.PKT_TRANS_READ            (69),
+		.PKT_ADDR_H                (47),
+		.PKT_ADDR_L                (18),
+		.PKT_BEGIN_BURST           (77),
+		.PKT_BYTE_CNT_H            (61),
+		.PKT_BYTE_CNT_L            (54),
+		.PKT_BYTEEN_H              (17),
+		.PKT_BYTEEN_L              (16),
+		.PKT_BURST_SIZE_H          (72),
+		.PKT_BURST_SIZE_L          (70),
+		.PKT_BURST_TYPE_H          (74),
+		.PKT_BURST_TYPE_L          (73),
+		.PKT_BURSTWRAP_H           (69),
+		.PKT_BURSTWRAP_L           (62),
+		.PKT_TRANS_COMPRESSED_READ (48),
+		.PKT_TRANS_WRITE           (50),
+		.PKT_TRANS_READ            (51),
 		.OUT_NARROW_SIZE           (0),
 		.IN_NARROW_SIZE            (1),
 		.OUT_FIXED                 (0),
 		.OUT_COMPLETE_WRAP         (0),
-		.ST_DATA_W                 (123),
+		.ST_DATA_W                 (105),
 		.ST_CHANNEL_W              (2),
-		.OUT_BYTE_CNT_H            (74),
-		.OUT_BURSTWRAP_H           (87),
+		.OUT_BYTE_CNT_H            (55),
+		.OUT_BURSTWRAP_H           (69),
 		.COMPRESSED_READ_SUPPORT   (1),
 		.BYTEENABLE_SYNTHESIS      (1),
 		.PIPE_INPUTS               (0),
@@ -748,28 +748,28 @@ module soc_system_mm_interconnect_0 (
 	);
 
 	altera_merlin_width_adapter #(
-		.IN_PKT_ADDR_H                 (65),
-		.IN_PKT_ADDR_L                 (36),
-		.IN_PKT_DATA_H                 (31),
+		.IN_PKT_ADDR_H                 (47),
+		.IN_PKT_ADDR_L                 (18),
+		.IN_PKT_DATA_H                 (15),
 		.IN_PKT_DATA_L                 (0),
-		.IN_PKT_BYTEEN_H               (35),
-		.IN_PKT_BYTEEN_L               (32),
-		.IN_PKT_BYTE_CNT_H             (79),
-		.IN_PKT_BYTE_CNT_L             (72),
-		.IN_PKT_TRANS_COMPRESSED_READ  (66),
-		.IN_PKT_TRANS_WRITE            (68),
-		.IN_PKT_BURSTWRAP_H            (87),
-		.IN_PKT_BURSTWRAP_L            (80),
-		.IN_PKT_BURST_SIZE_H           (90),
-		.IN_PKT_BURST_SIZE_L           (88),
-		.IN_PKT_RESPONSE_STATUS_H      (119),
-		.IN_PKT_RESPONSE_STATUS_L      (118),
-		.IN_PKT_TRANS_EXCLUSIVE        (71),
-		.IN_PKT_BURST_TYPE_H           (92),
-		.IN_PKT_BURST_TYPE_L           (91),
-		.IN_PKT_ORI_BURST_SIZE_L       (120),
-		.IN_PKT_ORI_BURST_SIZE_H       (122),
-		.IN_ST_DATA_W                  (123),
+		.IN_PKT_BYTEEN_H               (17),
+		.IN_PKT_BYTEEN_L               (16),
+		.IN_PKT_BYTE_CNT_H             (61),
+		.IN_PKT_BYTE_CNT_L             (54),
+		.IN_PKT_TRANS_COMPRESSED_READ  (48),
+		.IN_PKT_TRANS_WRITE            (50),
+		.IN_PKT_BURSTWRAP_H            (69),
+		.IN_PKT_BURSTWRAP_L            (62),
+		.IN_PKT_BURST_SIZE_H           (72),
+		.IN_PKT_BURST_SIZE_L           (70),
+		.IN_PKT_RESPONSE_STATUS_H      (101),
+		.IN_PKT_RESPONSE_STATUS_L      (100),
+		.IN_PKT_TRANS_EXCLUSIVE        (53),
+		.IN_PKT_BURST_TYPE_H           (74),
+		.IN_PKT_BURST_TYPE_L           (73),
+		.IN_PKT_ORI_BURST_SIZE_L       (102),
+		.IN_PKT_ORI_BURST_SIZE_H       (104),
+		.IN_ST_DATA_W                  (105),
 		.OUT_PKT_ADDR_H                (101),
 		.OUT_PKT_ADDR_L                (72),
 		.OUT_PKT_DATA_H                (63),
@@ -836,25 +836,25 @@ module soc_system_mm_interconnect_0 (
 		.IN_PKT_ORI_BURST_SIZE_L       (156),
 		.IN_PKT_ORI_BURST_SIZE_H       (158),
 		.IN_ST_DATA_W                  (159),
-		.OUT_PKT_ADDR_H                (65),
-		.OUT_PKT_ADDR_L                (36),
-		.OUT_PKT_DATA_H                (31),
+		.OUT_PKT_ADDR_H                (47),
+		.OUT_PKT_ADDR_L                (18),
+		.OUT_PKT_DATA_H                (15),
 		.OUT_PKT_DATA_L                (0),
-		.OUT_PKT_BYTEEN_H              (35),
-		.OUT_PKT_BYTEEN_L              (32),
-		.OUT_PKT_BYTE_CNT_H            (79),
-		.OUT_PKT_BYTE_CNT_L            (72),
-		.OUT_PKT_TRANS_COMPRESSED_READ (66),
-		.OUT_PKT_BURST_SIZE_H          (90),
-		.OUT_PKT_BURST_SIZE_L          (88),
-		.OUT_PKT_RESPONSE_STATUS_H     (119),
-		.OUT_PKT_RESPONSE_STATUS_L     (118),
-		.OUT_PKT_TRANS_EXCLUSIVE       (71),
-		.OUT_PKT_BURST_TYPE_H          (92),
-		.OUT_PKT_BURST_TYPE_L          (91),
-		.OUT_PKT_ORI_BURST_SIZE_L      (120),
-		.OUT_PKT_ORI_BURST_SIZE_H      (122),
-		.OUT_ST_DATA_W                 (123),
+		.OUT_PKT_BYTEEN_H              (17),
+		.OUT_PKT_BYTEEN_L              (16),
+		.OUT_PKT_BYTE_CNT_H            (61),
+		.OUT_PKT_BYTE_CNT_L            (54),
+		.OUT_PKT_TRANS_COMPRESSED_READ (48),
+		.OUT_PKT_BURST_SIZE_H          (72),
+		.OUT_PKT_BURST_SIZE_L          (70),
+		.OUT_PKT_RESPONSE_STATUS_H     (101),
+		.OUT_PKT_RESPONSE_STATUS_L     (100),
+		.OUT_PKT_TRANS_EXCLUSIVE       (53),
+		.OUT_PKT_BURST_TYPE_H          (74),
+		.OUT_PKT_BURST_TYPE_L          (73),
+		.OUT_PKT_ORI_BURST_SIZE_L      (102),
+		.OUT_PKT_ORI_BURST_SIZE_H      (104),
+		.OUT_ST_DATA_W                 (105),
 		.ST_CHANNEL_W                  (2),
 		.OPTIMIZE_FOR_RSP              (0),
 		.RESPONSE_PATH                 (0),
@@ -880,16 +880,16 @@ module soc_system_mm_interconnect_0 (
 	);
 
 	soc_system_mm_interconnect_0_avalon_st_adapter #(
-		.inBitsPerSymbol (34),
+		.inBitsPerSymbol (18),
 		.inUsePackets    (0),
-		.inDataWidth     (34),
+		.inDataWidth     (18),
 		.inChannelWidth  (0),
 		.inErrorWidth    (0),
 		.inUseEmptyPort  (0),
 		.inUseValid      (1),
 		.inUseReady      (1),
 		.inReadyLatency  (0),
-		.outDataWidth    (34),
+		.outDataWidth    (18),
 		.outChannelWidth (0),
 		.outErrorWidth   (1),
 		.outUseEmptyPort (0),

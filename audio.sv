@@ -10,7 +10,7 @@ module audio(
 				input logic SCK,	// Sampling rate * 32 bits * 2 channels: 325ns
 				
 				output logic WS,	// Smapling rate * 2 channels,
-				output logic [31:0] readdata,
+				output logic [15:0] readdata,
 				output logic irq
 				);
 	
@@ -59,7 +59,7 @@ assign WS = clk_cnt[5];  // Flip at 31 cycle
  * One combinational logic for state change
  * IDLE -> LEFT -> RIGHT -> LEFT -> ...
  */
-
+/*
 always_comb begin
 	case (current)
 		IDLE: if (WS_d == 1 & WS == 0) next = LEFT;
@@ -106,7 +106,31 @@ always_ff @(negedge SCK) begin
 		endcase
 	end
 end
-
+*/
+always_ff @(negedge SCK) begin
+	if (sck_rst) begin		// Initialize
+		right1 <= 24'd0;
+		right2 <= 24'd0;
+		left1 <= 24'd0;
+		left2 <= 24'd0;
+		left_pop <= 1'b0;
+		right_pop <= 1'b0;
+	end else begin
+		if (clk_cnt > 0 && clk_cnt < 25) begin // Left channel with 24 bits in total	
+			left1 <= {left1[22:0], SD1};
+			left2 <= {left2[22:0], SD2};
+			left_pop <= 1'd0;	
+		end else if (clk_cnt == 25) begin		// Left channel ready. Plug into the inputs of RAMs
+			left_pop <= 1'd1;
+		end else if (clk_cnt > 32 && clk_cnt < 57) begin	// Right channel, the same.
+			right1 <= {right1[22:0], SD1}; 
+			right2 <= {right2[22:0], SD2};
+			right_pop <= 1'd0; 
+		end else if (clk_cnt == 57) begin		// Right channel ready
+			right_pop <= 1'd1;
+		end
+	end
+end
 
 always_ff @(posedge clk) begin
 	if (rst) begin
@@ -127,13 +151,13 @@ always_ff @(posedge clk) begin
 	end
 	if (chipselect && read)
 		case (address)
-		3'h0: readdata <= {{8{1'b0}}, left1};
-		3'h1: readdata <= {{8{1'b0}}, right1};
-		3'h2: readdata <= {{8{1'b0}}, left2};
-		3'h3: readdata <= {{8{1'b0}}, right2};
+		3'h0: readdata <= left1[23:8];
+		3'h1: readdata <= right1[23:8];
+		3'h2: readdata <= left2[23:8];
+		3'h3: readdata <= right2[23:8];
 		3'h4: begin
 				irq <= 1'd0;
-				readdata <= 32'd1;
+				readdata <= 16'd1;
 		end
 		endcase
 end

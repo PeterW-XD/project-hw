@@ -115,7 +115,7 @@ module soc_system (
 	wire         hps_0_h2f_axi_master_awvalid;                        // hps_0:h2f_AWVALID -> mm_interconnect_0:hps_0_h2f_axi_master_awvalid
 	wire         hps_0_h2f_axi_master_rvalid;                         // mm_interconnect_0:hps_0_h2f_axi_master_rvalid -> hps_0:h2f_RVALID
 	wire         mm_interconnect_0_audio_0_avalon_slave_0_chipselect; // mm_interconnect_0:audio_0_avalon_slave_0_chipselect -> audio_0:chipselect
-	wire  [31:0] mm_interconnect_0_audio_0_avalon_slave_0_readdata;   // audio_0:readdata -> mm_interconnect_0:audio_0_avalon_slave_0_readdata
+	wire  [15:0] mm_interconnect_0_audio_0_avalon_slave_0_readdata;   // audio_0:readdata -> mm_interconnect_0:audio_0_avalon_slave_0_readdata
 	wire   [2:0] mm_interconnect_0_audio_0_avalon_slave_0_address;    // mm_interconnect_0:audio_0_avalon_slave_0_address -> audio_0:address
 	wire         mm_interconnect_0_audio_0_avalon_slave_0_read;       // mm_interconnect_0:audio_0_avalon_slave_0_read -> audio_0:read
 	wire         irq_mapper_receiver0_irq;                            // audio_0:irq -> irq_mapper:receiver0_irq
