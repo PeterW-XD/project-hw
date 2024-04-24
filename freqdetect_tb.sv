@@ -12,7 +12,7 @@ module freqdetect_tb();
    logic [9:0] ramaddr;
    logic [9:0] maxbin;
    logic [27:0] data;
-   
+
 	FFT_RAM ram (
 		.clock		(clk),
 		.rdaddress	(ramaddr),
@@ -45,9 +45,10 @@ module freqdetect_tb();
       for (int addr = 0; addr < 1024; addr++) begin
          wraddr = addr;
          ramaddr  = addr;
-         if (addr == 10'hCC) data = 28'hDDDD;
-         else                data = 28'hAAAA;
-         #1000;
+         if (addr == 10'hCC)      data = 28'h0EE00EE;    // addr: 204 decimal when reversed; should be returned as highest
+         else if (addr == 10'h260) data = 28'h0FF00FF;   // addr: 24 decimal when reversed; should be skipped even if larger than 10'hCC
+         else                     data = 28'h0AA00AA;
+         #500;
       end
       
       wren = 0;
