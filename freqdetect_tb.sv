@@ -12,8 +12,7 @@ module freqdetect_tb();
    logic [9:0] ramaddr;
    logic [9:0] maxbin;
    logic [27:0] data;
-   logic [27:0] ramq;
-
+   
 	FFT_RAM ram (
 		.clock		(clk),
 		.rdaddress	(ramaddr),
