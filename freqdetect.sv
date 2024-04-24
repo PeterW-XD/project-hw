@@ -56,7 +56,7 @@ always_ff @(posedge clk) begin
 					lastmag <= curmag;
 				end
 				
-				if (ramaddr == 11'h3FF) begin
+				if (ramaddr == 10'h3FF) begin
 					detectdone <= 1;
 					state <= idle;
 				end else state <= readone;
