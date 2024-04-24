@@ -1,56 +1,65 @@
 `timescale 1ns / 1ps
 
 module freqdetect_tb();
+   parameter CLK_PERIOD = 20; // Clock period in ns
 
-    // Parameters
-    parameter CLK_PERIOD = 20; // Clock period in ns
+   logic clk;
+   logic reset;
+   logic fftdone;
+   logic detectdone;
+   logic wren;
+   logic [9:0] wraddr;
+   logic [9:0] ramaddr;
+   logic [9:0] maxbin;
+   logic [27:0] data;
+   logic [27:0] ramq;
 
-    // Signals
-    logic clk;
-    logic reset;
-    logic fftdone;
-    logic [27:0] ramq;
-    logic detectdone;
-    logic [10:0] ramaddr;
-    logic [10:0] maxbin;
+	FFT_RAM ram (
+		.clock		(clk),
+		.rdaddress	(ramaddr),
+		.data			(data),
+		.wraddress	(wraddr),
+		.wren			(wren),
+      .q          (dut.ramq)
+	);
+	
+	freqdetect dut (
+      .clk(clk),
+      .reset(reset),
+      .fftdone(fftdone),
+      .detectdone(detectdone),
+		.ramq(ram.q),
+      .ramaddr(ramaddr),
+      .maxbin(maxbin)
+   );
 
-    // Instantiate the module
-    freqdetect dut (
-        .clk(clk),
-        .reset(reset),
-        .fftdone(fftdone),
-        .ramq(ramq),
-        .detectdone(detectdone),
-        .ramaddr(ramaddr),
-        .maxbin(maxbin)
-    );
+	always #((CLK_PERIOD / 2)) clk = ~clk;
 
-    // Clock generation
-    always #((CLK_PERIOD / 2)) clk = ~clk;
+   initial begin
 
-    // Test stimulus
-    initial begin
-        clk = 0;
-        reset = 1;
-        fftdone = 0;
-        ramq = 0;
-        
-        #10;
-        reset = 0;
+		clk = 0;
+      reset = 0;
+      fftdone = 0;
+      wren = 1;
 
-        // Test case: Provide FFT done signal and RAM data with max value at index 300
-        fftdone = 1;
-        ramaddr = 0;
-        repeat (1024) begin
-            ramq = 28'h00000000;
-            if (ramaddr == 204) begin
-                ramq = 28'h000FF000;
-            end
-            #20;
-            ramaddr = ramaddr + 1;
-        end
+      // Fill RAM
+      for (int addr = 0; addr < 1024; addr++) begin
+         wraddr = addr;
+         ramaddr  = addr;
+         if (addr == 10'hCC) data = 28'hDDDD;
+         else                data = 28'hAAAA;
+         #1000;
+      end
+      
+      wren = 0;
+      reset = 1;
+      #100;
+      reset = 0;
+		
+		#100;
+		fftdone = 1;
 
-        $finish;
-    end
+		#100000;
+	end
 
 endmodule
