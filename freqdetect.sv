@@ -11,15 +11,15 @@ module freqdetect(
 
 enum logic [4:0] {idle, readone, readtwo, multiply, compare} state;
 logic [9:0] ramaddr_rv;  // Bit-reversal of ramaddr (restores linear index in FFT)
-logic [13:0] realsq;
-logic [13:0] imagsq;
-logic [27:0] curmag;
+logic signed [13:0] real_c;
+logic signed [13:0] imag_c;
+logic [27:0] cursqmag;
 logic [27:0] lastmag;
 logic ireset;				// Internal reset
 logic rst;
 
 assign rst = ireset || reset;
-assign curmag = realsq*realsq + imagsq*imagsq;
+assign cursqmag = real_c*real_c + imag_c*imag_c;
 assign ramaddr_rv = {ramaddr[0], ramaddr[1], ramaddr[2], ramaddr[3], ramaddr[4], ramaddr[5], ramaddr[6], ramaddr[7], ramaddr[8], ramaddr[9]};
 
 initial begin
@@ -33,8 +33,8 @@ always_ff @(posedge clk) begin
 
 		ramaddr <= 10'b0;
 		maxbin <= 10'b0;
-		realsq <= 14'b0;
-		imagsq <= 14'b0;
+		real_c <= 14'b0;
+		imag_c <= 14'b0;
 		lastmag <= 27'b0;
 		
 		state <= idle;
@@ -46,14 +46,14 @@ always_ff @(posedge clk) begin
 			readtwo:					// Second read cycle
 				state <= multiply;
 			multiply: begin				// Read components into multiplier input registers
-				realsq <= ramq[27:14];
-				imagsq <= ramq[13:0];
+				real_c <= ramq[27:14];
+				imag_c <= ramq[13:0];
 				state <= compare;
 			end
 			compare: begin				// Update bin corresponding to squared mag max
-				if ((curmag > lastmag) && (ramaddr_rv > 10'd30)) begin
+				if ((cursqmag > lastmag) && (ramaddr_rv > 10'd30)) begin
 					maxbin <= ramaddr;
-					lastmag <= curmag;
+					lastmag <= cursqmag;
 				end
 				
 				if (ramaddr == 10'h3FF) begin

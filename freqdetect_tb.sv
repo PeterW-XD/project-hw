@@ -59,7 +59,7 @@ module freqdetect_tb();
 		#100;
 		fftdone = 1;
 
-		#100000;
+		#1000;
 	end
 
 endmodule

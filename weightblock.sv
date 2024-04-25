@@ -18,4 +18,9 @@ module weightblock(
 
 input logic [3:0] fftvals [27:0];
 
+// Note: rdaddr1 is set by freqdetect block when detectdone = 1
+assign rdaddr2 = maxbin;
+assign rdaddr3 = maxbin;
+assign rdaddr4 = maxbin;
+
 endmodule
