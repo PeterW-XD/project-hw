@@ -1,26 +1,31 @@
-module fft_wrapper(clk, in_signal, real_power, imag_power, fft_source_sop, sink_sop, sink_eop, sink_valid);
+module fft_wrapper(clk, in_signal, real_out, imag_out, fft_source_sop, sink_sop, sink_eop, sink_valid, reset_n);
 
 input clk;
-//input wire[13:0] in_real;
-//input wire[13:0] in_imag;
 input wire[13:0] in_signal;
 
-output wire[24:0] real_power;
-output wire[24:0] imag_power;
+output wire[13:0] real_out;
+output wire[13:0] imag_out;
 
+wire[13:0] real_power;
+wire[13:0] imag_power;
 output wire sink_valid;
-wire sink_ready;
 output wire sink_sop;
 output wire sink_eop;
-wire[9:0] fft_pts;
 output wire fft_source_sop;
+
+wire sink_ready;
+
+wire[10:0] fft_pts;
 wire fft_source_eop;
 
 wire[13:0] real_to_fft_p;
 wire[13:0] imag_to_fft_p;
 reg[4:0] count;
-reg reset_n;
-reg eop2, sop2, eop5;
+output reg reset_n;
+//reg eop2, sop2, eop5;
+
+assign real_out = real_power/10000;
+assign imag_out = imag_power/10000;
 
 initial begin
 	reset_n = 0;
@@ -49,7 +54,7 @@ control_fft control_fft_inst (
 	.fft_pts(fft_pts)
 );
 
-unnamed fft_inst(
+fft_block fft_inst(
 	.clk(clk), 
 	.reset_n(reset_n), 
 	.sink_valid(sink_valid), 
