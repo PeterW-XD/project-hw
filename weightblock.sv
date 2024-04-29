@@ -4,39 +4,43 @@ module weightblock(
 	input logic detectdone,
 
 	input logic [9:0] maxbin,
-	input logic [9:0] rdaddr2,
-	input logic [9:0] rdaddr3,
-	input logic [9:0] rdaddr4,
-	input logic [27:0] ram1q,	// FFT RAMs
-	input logic [27:0] ram2q,
-	input logic [27:0] ram3q,
-	input logic [27:0] ram4q,
+	input logic [27:0] ramq1,	// FFT RAMs
+	input logic [27:0] ramq2,
+	input logic [27:0] ramq3,
+	input logic [27:0] ramq4,
 	
+	output logic [9:0] rdaddr2,	// Will be set to maxbin for all FFT RAMs
+	output logic [9:0] rdaddr3,
+	output logic [9:0] rdaddr4,
 	output logic done,
-	output logic bnum,				// (0 to 12)
-	output logic signed [7:0] doa,	// (-90 to 90)
+	output logic [3:0] bnum,		// (0 to 12)
+	output logic signed [7:0] doa	// (-90 to 90)
+	
 );
 
-enum logic [1:0] {idle, micloop};
+enum logic [4:0] {idle, memread, micloop, compare, complete} state;
 logic ireset;
-logic mmclr;				// Synchronous clear for multiply accumulator
+logic [2:0] rcount;			// Read cycle counter
 logic [2:0] mnum;			// Microphone number
-logic [3:0] bnum;			// Beam number
 logic [3:0] maxbnum;		// Beam corresponding to max power
 logic [5:0] dladdr;			// ROM address to get delay coefficient
 logic [27:0] dcoeff;		// Delay coefficient from ROM
-logic [27:0] delayprod;		// Product of FFT and delay coefficient (delay coeff. mag ~1 so no bit expansion necessary)
-logic [27:0] sigpwr;		// Sum of products of delay coefficients and FFTs at maxbin
-logic [27:0] maxpwr;		// Max signal power
-logic signed [3:0] sspec [27:0];	// FFTs by channel at maxbin
+logic [55:0] delayprod;		// Product of FFT and delay coefficient
+logic [55:0] realsq;		// real(delayprod)^2
+logic [55:0] imagsq; 		// imag(delayprod)^2
+logic [56:0] prodmagsq;		// Squared magnitude of delayprod
+logic [60:0] sigpwr;		// Array output for a direction
+logic [60:0] maxpwr;		// Max array output power
+logic signed [27:0] sspec [3:0];	// FFTs by channel at maxbin
 
 // Note: rdaddr1 is set by freqdetect block when detectdone = 1
 assign rst = ireset || reset;
 assign rdaddr2 = maxbin;
 assign rdaddr3 = maxbin;
 assign rdaddr4 = maxbin;
-assign dladdr = 13*bnum + mnum;
-assign maxdir = -90 + 15*maxbnum;
+assign dladdr = 4*bnum + mnum;
+assign doa = -90 + 15*maxbnum;
+assign prodmagsq = realsq + imagsq;
 
 // Delay matrix preloaded into ROM
 delay_ROM drom (
@@ -46,35 +50,53 @@ delay_ROM drom (
 );
 
 // Complex multiplier for delay * FFT
-compmult mult (
-	.dataa	(dcoeff),
-	.datab	(sspec[mnum]),
-	.result	(delayprod)
+compmult cmult (
+	.dataa_real		(dcoeff[27:14]),
+	.dataa_imag		(dcoeff[13:0]),
+	.datab_real		(sspec[mnum][27:14]),
+	.datab_imag		(sspec[mnum][13:0]),
+	.result_real	(delayprod[55:28]),
+	.result_imag	(delayprod[27:0])
 );
 
-// Multiplier for magnitude of delayprod
-multiplier magmult (
-	.dataa_0	(delayprod[27:14]),
-	.datab_0	(delayprod[13:0]),
-	.result		(sigpwr),
-	.clock0		(clk),
-	.sclr0		(mmclr)
+// Multiplier IP computes square for real(delayprod)^2
+realmult m1 (
+	.dataa	(delayprod[55:28]),
+	.result	(realsq)
 );
 
-always_ff @(posedge) begin
+realmult m2 (
+	.dataa	(delayprod[27:0]),
+	.result	(imagsq)
+);
+
+always_ff @(posedge clk) begin
 	if (rst) begin
 		sspec[3:0] <= {ramq1, ramq2, ramq3, ramq4};
 		maxpwr <= 28'b0;
+		maxbnum <= 4'b0;
+		sigpwr <= 28'b0;
 		{mnum, bnum} <= 7'b0;
-		dladdr <= 6'b0;
-		doa <= 8'b-1;
+		rcount <= 2'b0;
 		done <= 0;
-	end else if (dladdr < 6'd51) begin
+
+		state <= idle;
+	end else if (dladdr < 6'd52) begin
 		case (state)
-			idle: if (detectdone && !done) state <= micloop;
+			idle: begin
+				if (detectdone && !done) state <= memread;
+			end
+			memread: begin
+				if (rcount != 2'd2) begin
+					rcount <= rcount + 1;
+				end else begin
+					rcount <= 2'd0;
+					state <= micloop;
+				end
+			end
 			micloop: begin	// Loop through channels and multiply by dcoeffs
 				// Multipliers work combinationally
-				// Accumulator updates on clock edges
+				sigpwr <= sigpwr + prodmagsq;
 				if (mnum == 3)	begin
 					state <= compare;
 				end else mnum <= mnum + 1;
@@ -85,14 +107,26 @@ always_ff @(posedge) begin
 					maxpwr <= sigpwr;
 					maxbnum <= bnum;
 				end
-	
-				if (bnum == 12) begin
+				if (bnum == 4'd12) begin
 					done <= 1;
-					state <= idle;
+					state <= complete;
 				end else begin
 					bnum <= bnum + 1;
 					mnum <= 0;
-					state <= micloop;
+					sigpwr <= 0;
+					state <= memread;
+				end
+			end
+			complete: begin
+				done <= 0;
+				if (detectdone) begin
+					sspec[3:0] <= {ramq1, ramq2, ramq3, ramq4};
+					maxpwr <= 28'b0;
+					maxbnum <= 4'b0;
+					sigpwr <= 28'b0;
+					{mnum, bnum} <= 7'b0;
+					rcount <= 2'b0;
+					state <= memread;
 				end
 			end
 		endcase;
