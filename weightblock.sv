@@ -19,8 +19,7 @@ module weightblock(
 );
 
 enum logic [4:0] {idle, memread, micloop, compare, complete} state;
-logic ireset;
-logic [2:0] rcount;			// Read cycle counter
+logic rcount;				// Read cycle counter
 logic [2:0] mnum;			// Microphone number
 logic [3:0] maxbnum;		// Beam corresponding to max power
 logic [5:0] dladdr;			// ROM address to get delay coefficient
@@ -33,8 +32,7 @@ logic [60:0] sigpwr;		// Array output for a direction
 logic [60:0] maxpwr;		// Max array output power
 logic signed [27:0] sspec [3:0];	// FFTs by channel at maxbin
 
-// Note: rdaddr1 is set by freqdetect block when detectdone = 1
-assign rst = ireset || reset;
+// Note: rdaddr1 is set to maxbin by freqdetect block while it is in its complete state
 assign rdaddr2 = maxbin;
 assign rdaddr3 = maxbin;
 assign rdaddr4 = maxbin;
@@ -65,14 +63,15 @@ realmult m1 (
 	.result	(realsq)
 );
 
+// Multiplier IP computes square for imag(delayprod)^2
 realmult m2 (
 	.dataa	(delayprod[27:0]),
 	.result	(imagsq)
 );
 
 always_ff @(posedge clk) begin
-	if (rst) begin
-		sspec[3:0] <= {ramq1, ramq2, ramq3, ramq4};
+	if (reset) begin
+		sspec[3:0] <= {ramq4, ramq3, ramq2, ramq1};
 		maxpwr <= 28'b0;
 		maxbnum <= 4'b0;
 		sigpwr <= 28'b0;
@@ -87,10 +86,10 @@ always_ff @(posedge clk) begin
 				if (detectdone && !done) state <= memread;
 			end
 			memread: begin
-				if (rcount != 2'd2) begin
+				if (rcount != 1) begin
 					rcount <= rcount + 1;
 				end else begin
-					rcount <= 2'd0;
+					rcount <= 0;
 					state <= micloop;
 				end
 			end
@@ -99,10 +98,13 @@ always_ff @(posedge clk) begin
 				sigpwr <= sigpwr + prodmagsq;
 				if (mnum == 3)	begin
 					state <= compare;
-				end else mnum <= mnum + 1;
+				end else begin
+					mnum <= mnum + 1;
+					state <= memread;
+				end
 			end 
 			compare: begin
-				// Update maxpwr and maxbnum based on accumulator output
+				// Update maxpwr and maxbnum
 				if (sigpwr > maxpwr) begin
 					maxpwr <= sigpwr;
 					maxbnum <= bnum;
@@ -120,12 +122,12 @@ always_ff @(posedge clk) begin
 			complete: begin
 				done <= 0;
 				if (detectdone) begin
-					sspec[3:0] <= {ramq1, ramq2, ramq3, ramq4};
+					sspec[3:0] <= {ramq4, ramq3, ramq2, ramq1};
 					maxpwr <= 28'b0;
 					maxbnum <= 4'b0;
 					sigpwr <= 28'b0;
 					{mnum, bnum} <= 7'b0;
-					rcount <= 2'b0;
+					rcount <= 0;
 					state <= memread;
 				end
 			end
