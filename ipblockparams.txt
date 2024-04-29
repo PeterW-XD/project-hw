@@ -1,0 +1,9 @@
+compmult: ALTMULT_COMPLEX
+	28-bit input (14 signed real | 14 signed imag)
+	56-bit output
+	No pipelining
+
+realmult: LPM_MULT	(configured to compute square)
+	28-bit signed input
+	56-bit unsigned output
+	
