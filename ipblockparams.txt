@@ -6,4 +6,6 @@ compmult: ALTMULT_COMPLEX
 realmult: LPM_MULT	(configured to compute square)
 	28-bit signed input
 	56-bit unsigned output
-	
+
+delay_ROM: ROM
+	1-port 28-bit width and 52-bit depth	
