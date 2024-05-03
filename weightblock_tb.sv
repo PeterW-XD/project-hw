@@ -70,7 +70,7 @@ module weightblock_tb();
         .rdaddr4    (ram4.rdaddress),
         .done       (done),
         .bnum       (bnum),
-        .doa        (doa),
+        .doa        (doa)
     );
 
 	always #((CLK_PERIOD / 2)) clk = ~clk;

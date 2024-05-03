@@ -14,7 +14,7 @@ module weightblock(
 	output logic [9:0] rdaddr4,
 	output logic done,
 	output logic [3:0] bnum,		// (0 to 12)
-	output logic signed [7:0] doa,	// (-90 to 90)
+	output logic signed [7:0] doa	// (-90 to 90)
 );
 
 enum logic [4:0] {idle, memread, micloop, compare, complete} state;
@@ -77,7 +77,7 @@ always_ff @(posedge clk) begin
 		ssreal <= 32'b0;
 		ssimag <= 32'b0;
 		{mnum, bnum} <= 7'b0;
-		rcount <= 2'b0;
+		rcount <= 0;
 		done <= 0;
 
 		state <= idle;
