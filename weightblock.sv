@@ -13,15 +13,15 @@ module weightblock(
 	output logic [9:0] rdaddr3,
 	output logic [9:0] rdaddr4,
 	output logic done,
-	output logic [3:0] bnum,		// (0 to 12)
+	output logic [5:0] bnum,		// (0 to 36)
 	output logic signed [7:0] doa	// (-90 to 90)
 );
 
 enum logic [4:0] {idle, memread, micloop, compare, complete} state;
 logic rcount;				// Read cycle counter
 logic [2:0] mnum;			// Microphone number
-logic [3:0] maxbnum;		// Beam corresponding to max power
-logic [5:0] dladdr;			// ROM address to get delay coefficient
+logic [5:0] maxbnum;		// Beam corresponding to max power
+logic [7:0] dladdr;			// ROM address to get delay coefficient
 logic [27:0] dcoeff;		// Delay coefficient from ROM
 logic [55:0] delayprod;		// Product of FFT and delay coefficient
 logic signed [31:0] ssreal;	// real(sigsum); sigsum = sum of all delayprods for a given bnum
@@ -37,7 +37,7 @@ assign rdaddr2 = maxbin;
 assign rdaddr3 = maxbin;
 assign rdaddr4 = maxbin;
 assign dladdr = 4*bnum + mnum;
-assign doa = -90 + 15*maxbnum;
+assign doa = -90 + 5*maxbnum;
 assign sigpwr = ssrealsq + ssimagsq;
 
 // Delay matrix preloaded into ROM
@@ -73,15 +73,15 @@ always_ff @(posedge clk) begin
 	if (reset) begin
 		sspec[3:0] <= {ramq4, ramq3, ramq2, ramq1};
 		maxpwr <= 28'b0;
-		maxbnum <= 4'b0;
+		maxbnum <= 6'b0;
 		ssreal <= 32'b0;
 		ssimag <= 32'b0;
-		{mnum, bnum} <= 7'b0;
+		{mnum, bnum} <= 9'b0;
 		rcount <= 0;
 		done <= 0;
 
 		state <= idle;
-	end else if (dladdr < 6'd52) begin
+	end else if (dladdr < 248) begin
 		case (state)
 			idle: begin
 				if (detectdone && !done) state <= memread;
@@ -111,7 +111,7 @@ always_ff @(posedge clk) begin
 					maxpwr <= sigpwr;
 					maxbnum <= bnum;
 				end
-				if (bnum == 4'd12) begin
+				if (bnum == 6'd36) begin
 					done <= 1;
 					state <= complete;
 				end else begin
@@ -127,10 +127,10 @@ always_ff @(posedge clk) begin
 				if (detectdone) begin
 					sspec[3:0] <= {ramq4, ramq3, ramq2, ramq1};
 					maxpwr <= 65'b0;
-					maxbnum <= 4'b0;
+					maxbnum <= 6'b0;
 					ssreal <= 32'b0;
 					ssimag <= 32'b0;
-					{mnum, bnum} <= 7'b0;
+					{mnum, bnum} <= 9'b0;
 					rcount <= 0;
 					state <= memread;
 				end

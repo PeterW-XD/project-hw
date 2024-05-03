@@ -138,7 +138,7 @@ module weightblock_tb();
         #20;
         detectdone = 0;
 
-        #5000;
+        #15000;
         $stop;
     end
 
