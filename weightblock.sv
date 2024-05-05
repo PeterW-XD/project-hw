@@ -14,7 +14,9 @@ module weightblock(
 	output logic [9:0] rdaddr4,
 	output logic done,
 	output logic [5:0] bnum,		// (0 to 36)
-	output logic signed [7:0] doa	// (-90 to 90)
+	output logic signed [7:0] doa,	// (-90 to 90)
+
+	output logic [6:0] HEX2, HEX1, HEX0		// 7seg displays (HEX5)
 );
 
 enum logic [4:0] {idle, memread, micloop, compare, complete} state;
@@ -67,6 +69,17 @@ realmult m1 (
 realmult m2 (
 	.dataa	(ssimag),
 	.result	(ssimagsq)
+);
+
+// 7 Segment Displays
+angdisplay disp (
+	.clk		(clk),
+	.wbdone		(done),
+	.reset		(reset),
+	.angle		(doa),
+	.signdisp	(HEX2),
+	.disp1		(HEX1),
+	.disp0		(HEX0)
 );
 
 always_ff @(posedge clk) begin

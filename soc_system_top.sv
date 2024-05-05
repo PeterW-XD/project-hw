@@ -308,12 +308,12 @@ logic SCK;
    assign GPIO_0[35:3] = SW[1] ? { 33{ SW[0] } } : 33'bZ;
    assign GPIO_1 = SW[1] ? { 36{ SW[0] } } : 36'bZ;
 
-   assign HEX0 = { 7{ SW[1] } };
-   assign HEX1 = { 7{ SW[2] } };
-   assign HEX2 = { 7{ SW[3] } };
-   assign HEX3 = { 7{ SW[4] } };
-   assign HEX4 = { 7{ SW[5] } };
-   assign HEX5 = { 7{ SW[6] } };
+  //  assign HEX0 = { 7{ SW[1] } };
+  //  assign HEX1 = { 7{ SW[2] } };
+  //  assign HEX2 = { 7{ SW[3] } };
+   assign HEX3 = 7'b111_1111;
+   assign HEX4 = 7'b111_1111;
+   assign HEX5 = 7'b111_1111;
 
    assign IRDA_TXD = SW[0];
 
