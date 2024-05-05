@@ -1,6 +1,6 @@
 module weightblock(
 	input logic clk,
-	input logic reset,
+	input logic [3:0] KEY,		// Reset key is 0
 	input logic detectdone,
 
 	input logic [9:0] maxbin,
@@ -35,6 +35,7 @@ logic [64:0] maxpwr;		// Max array output power
 logic signed [27:0] sspec [3:0];	// FFTs by channel at maxbin
 
 // Note: rdaddr1 is set to maxbin by freqdetect block while it is in its complete state
+assign reset = ~KEY[0];
 assign rdaddr2 = maxbin;
 assign rdaddr3 = maxbin;
 assign rdaddr4 = maxbin;
