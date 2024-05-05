@@ -24,8 +24,8 @@ reg[4:0] count;
 output reg reset_n;
 //reg eop2, sop2, eop5;
 
-assign real_out = real_power/10000;
-assign imag_out = imag_power/10000;
+//assign real_out = real_power/10000;
+//assign imag_out = imag_power/10000;
 
 initial begin
 	reset_n = 0;
