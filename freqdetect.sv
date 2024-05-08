@@ -20,11 +20,6 @@ assign reset = ~KEY[0];
 assign cursqmag = real_c*real_c + imag_c*imag_c;
 assign ramaddr_rv = {ramaddr[0], ramaddr[1], ramaddr[2], ramaddr[3], ramaddr[4], ramaddr[5], ramaddr[6], ramaddr[7], ramaddr[8], ramaddr[9]};
 
-initial begin
-	reset = 1;
-	@(negedge clk) reset = 0;
-end
-
 always_ff @(posedge clk) begin
 	if (reset) begin
 		detectdone <= 0;
