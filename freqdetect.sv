@@ -49,7 +49,7 @@ always_ff @(posedge clk) begin
 					maxbin <= ramaddr;
 					maxsqmag <= cursqmag;
 				end
-				
+
 				if (ramaddr == 10'h3FF) begin
 					detectdone <= 1;
 					state <= complete;
