@@ -43,6 +43,8 @@ module angdisplay(input logic clk,
             disp1 <= 7'b011_1111;
         end else if (wbdone) begin
             signdisp <= angle[7] ? 7'b100_0000 : 7'b111_1111;
+            disp0 <= absang[0] ? 7'b001_0010 : 7'b100_0000;  // Ones can only be 0 or 5
+
             // Convert |angle| to two 7segs (-90 to 90)
             // Tens place
             case (tens)
@@ -57,20 +59,6 @@ module angdisplay(input logic clk,
                 8'd80:   disp1 <= 7'b000_0000;       // 8
                 8'd90:   disp1 <= 7'b001_0000;       // 9
                 default: disp1 <= 7'b011_1111;       // -
-            endcase
-
-            // Ones place
-            // mod 8; mod 10 too expensive and only needs to accommodate 5 degree resolution
-            case ((absang - tens) & 8'b000_0111) 
-                8'd0:   disp0 <= 7'b100_0000;
-                8'd1:   disp0 <= 7'b111_1001;
-                8'd2:   disp0 <= 7'b010_0100;
-                8'd3:   disp0 <= 7'b011_0000;
-                8'd4:   disp0 <= 7'b001_1001;
-                8'd5:   disp0 <= 7'b001_0010;
-                8'd6:   disp0 <= 7'b000_0010;
-                8'd7:   disp0 <= 7'b111_1000;
-                default: disp0 <= 7'b011_1111;
             endcase
         end
     end
