@@ -19,7 +19,7 @@ module freqweight_tb();
     FFT1_TESTRAM ram1 (
 	    .clock		(clk),
 		.rdaddress	(dut1.ramaddr),
-        .wren       (0),
+        .wren       (1'b0),
         .wraddress  (),
 		.data		(),
         .q          (dut1.ramq)
@@ -28,7 +28,7 @@ module freqweight_tb();
     FFT2_TESTRAM ram2 (
 	    .clock		(clk),
 		.rdaddress	(dut2.rdaddr2),
-        .wren       (0),
+        .wren       (1'b0),
         .wraddress  (),
 		.data		(),
         .q          (dut2.ramq2)
@@ -37,7 +37,7 @@ module freqweight_tb();
     FFT3_TESTRAM ram3 (
 	    .clock		(clk),
 		.rdaddress	(dut2.rdaddr3),
-        .wren       (0),
+        .wren       (1'b0),
         .wraddress  (),
 		.data		(),
         .q          (dut2.ramq3)
@@ -46,7 +46,7 @@ module freqweight_tb();
     FFT4_TESTRAM ram4 (
 	    .clock		(clk),
 		.rdaddress	(dut2.rdaddr4),
-        .wren       (0),
+        .wren       (1'b0),
         .wraddress  (),
 		.data		(),
         .q          (dut2.ramq4)
@@ -54,7 +54,7 @@ module freqweight_tb();
 
     freqdetect dut1 (
         .clk        (clk),
-        .KEY        ({3'b0, reset}),
+        .reset      (reset),
         .fftdone    (fftdone),
         .detectdone (dut2.detectdone),
         .ramq       (ram1.q),
@@ -64,7 +64,7 @@ module freqweight_tb();
 
     weightblock dut2 (
         .clk        (clk),
-        .KEY        ({3'b0, reset}),
+        .reset      (reset),
         .detectdone (dut1.detectdone),
         .maxbin     (dut1.maxbin),
         .ramq1      (ram1.q),
@@ -84,13 +84,13 @@ module freqweight_tb();
 
     initial begin
         clk = 0;
-        reset = 1;
+        reset = 0;
         fftdone = 0;
 
         #100;
-        reset = 0;
-        #100;
         reset = 1;
+        #100;
+        reset = 0;
         
         #100;
         fftdone = 1;

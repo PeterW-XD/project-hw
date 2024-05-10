@@ -1,6 +1,6 @@
 module weightblock(
 	input logic clk,
-	input logic [3:0] KEY,		// Reset key is 0
+	input logic reset,			// To be mapped to ~KEY[0]
 	input logic detectdone,
 
 	input logic [9:0] maxbin,
@@ -16,7 +16,7 @@ module weightblock(
 	output logic [5:0] bnum,		// (0 to 36)
 	output logic signed [7:0] doa,	// (-90 to 90)
 
-	output logic [6:0] HEX2, HEX1, HEX0		// 7seg displays (HEX5)
+	output logic [6:0] disp2, disp1, disp0		// 7seg displays
 );
 
 enum logic [4:0] {idle, start, memread, micloop, compare, complete} state;
@@ -35,7 +35,6 @@ logic [64:0] maxpwr;		// Max array output power
 logic signed [27:0] sspec [3:0];	// FFTs by channel at maxbin
 
 // Note: rdaddr1 is set to maxbin by freqdetect block while it is in its complete state
-assign reset = ~KEY[0];
 assign rdaddr2 = maxbin;
 assign rdaddr3 = maxbin;
 assign rdaddr4 = maxbin;
@@ -77,11 +76,11 @@ realmult m2 (
 angdisplay disp (
 	.clk		(clk),
 	.wbdone		(done),
-    .KEY        ({3'b0, KEY[0]}),
+    .reset      (reset),
 	.angle		(doa),
-	.signdisp	(HEX2),
-	.disp1		(HEX1),
-	.disp0		(HEX0)
+	.signdisp	(disp2),
+	.disp1		(disp1),
+	.disp0		(disp0)
 );
 
 always_ff @(posedge clk) begin

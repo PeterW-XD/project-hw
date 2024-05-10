@@ -1,6 +1,6 @@
 module freqdetect(
 		input logic clk,				// 50 MHz, 20 ns
-		input logic [3:0] KEY,			// Reset key is 0
+		input logic reset,				// Reset key is 0
 		input logic fftdone,			// Set high upon FFT block finishing
 		input logic [27:0] ramq,		// Output port of channel 1 FFT RAM
 
@@ -16,7 +16,6 @@ logic signed [13:0] imag_c;
 logic [28:0] cursqmag;
 logic [28:0] maxsqmag;
 
-assign reset = ~KEY[0];
 assign cursqmag = real_c*real_c + imag_c*imag_c;
 assign ramaddr_rv = {ramaddr[0], ramaddr[1], ramaddr[2], ramaddr[3], ramaddr[4], ramaddr[5], ramaddr[6], ramaddr[7], ramaddr[8], ramaddr[9]};
 

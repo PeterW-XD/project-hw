@@ -1,6 +1,6 @@
 module angdisplay(input logic clk,
                   input logic wbdone,        // done signal from weightblock
-                  input logic [3:0] KEY,     // Reset key is 0
+                  input logic reset,
 			      input logic signed [7:0] angle,
 
 	    	      output logic [6:0] signdisp, disp0, disp1);
@@ -8,7 +8,6 @@ module angdisplay(input logic clk,
     logic [7:0] absang;
     logic [7:0] tens;
 
-    assign reset = ~KEY[0];
     assign absang = angle[7] ? ~angle + 1 : angle;
 
     always_comb begin
