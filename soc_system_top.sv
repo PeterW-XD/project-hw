@@ -269,11 +269,40 @@ logic SCK;
      .hps_hps_io_gpio_inst_GPIO53  ( HPS_LED ),
      .hps_hps_io_gpio_inst_GPIO54  ( HPS_KEY ),
      .hps_hps_io_gpio_inst_GPIO61  ( HPS_GSENSOR_INT ),
+
+	  // Reset
+	  .clk_0.clk_in_reset(~KEY[0]),
 		
-		.audio_sck	(SCK),
-		.audio_sd	(GPIO_0[1]),
-		.audio_ws	(GPIO_0[2])
+	  // Audio conduit
+	  .audio_sck	(SCK),
+	  .audio_sd		(GPIO_0[1]),
+	  .audio_ws		(GPIO_0[2]),
+
+	  // Freq Detect conduit 
+     .fdc_fdc_detectdone			(.wbc_wb_detectdone),
+	  .fdc_fdc_fftdone				(),
+     .fdc_fdc_maxbin					(.wbc_wb_maxbin),
+     .fdc_fdc_ramaddr				(),
+	  .fdc_fdc_ramq					(),
+
+	  // Weightblock conduit
+	  .wbc_wb_bnum			(),
+	  .wbc_wb_detectdone	(.fdc_fdc_detectdone),
+	  .wbc_wb_disp0		(HEX0),
+	  .wbc_wb_disp1		(HEX1),
+	  .wbc_wb_disp2		(HEX2),
+	  .wbc_wb_doa			(),
+	  .wbc_wb_done			(),
+	  .wbc_wb_maxbin		(.fdc_fdc_maxbin),
+	  .wbc_wb_ramq1		(),
+	  .wbc_wb_ramq2		(),
+	  .wbc_wb_ramq3		(),
+	  .wbc_wb_ramq4		(),
+	  .wbc_wb_rdaddr2		(),
+	  .wbc_wb_rdaddr3		(),
+	  .wbc_wb_rdaddr4		()
   );
+
 	pll_ip pll_ip_inst (
 		.refclk   (CLOCK_50),   //  refclk.clk
 		.rst      (1'b0),      //   reset.reset

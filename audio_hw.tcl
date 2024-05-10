@@ -77,6 +77,9 @@ set_module_assignment embeddedsw.dts.group audio
 set_module_assignment embeddedsw.dts.name audio
 set_module_assignment embeddedsw.dts.vendor csee4840
 
+set_module_assignment embeddedsw.dts.group  "fcd"
+set_module_assignment embeddedsw.dts.name "freq_detect"
+set_module_assignment embeddedsw.dts.vendor "csee4840"
 
 # 
 # display items
