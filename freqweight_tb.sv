@@ -9,7 +9,6 @@ module freqweight_tb();
 
     // freqdetect logic
     logic fftdone;
-    logic [9:0] ramaddr;
     logic [9:0] maxbin;
 
     // weightblock signals
