@@ -61,15 +61,15 @@ module angdisplay(input logic clk,
 
             // Ones place
             // mod 8; mod 10 too expensive and only needs to accommodate 5 degree resolution
-            case ((absang - tens) & 7'b000_0111) 
-                7'd0:   disp0 <= 7'b100_0000;
-                7'd1:   disp0 <= 7'b111_1001;
-                7'd2:   disp0 <= 7'b010_0100;
-                7'd3:   disp0 <= 7'b011_0000;
-                7'd4:   disp0 <= 7'b001_1001;
-                7'd5:   disp0 <= 7'b001_0010;
-                7'd6:   disp0 <= 7'b000_0010;
-                7'd7:   disp0 <= 7'b111_1000;
+            case ((absang - tens) & 8'b000_0111) 
+                8'd0:   disp0 <= 7'b100_0000;
+                8'd1:   disp0 <= 7'b111_1001;
+                8'd2:   disp0 <= 7'b010_0100;
+                8'd3:   disp0 <= 7'b011_0000;
+                8'd4:   disp0 <= 7'b001_1001;
+                8'd5:   disp0 <= 7'b001_0010;
+                8'd6:   disp0 <= 7'b000_0010;
+                8'd7:   disp0 <= 7'b111_1000;
                 default: disp0 <= 7'b011_1111;
             endcase
         end
