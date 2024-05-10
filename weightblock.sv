@@ -19,7 +19,7 @@ module weightblock(
 	output logic [6:0] HEX2, HEX1, HEX0		// 7seg displays
 );
 
-enum logic [4:0] {idle, memread, micloop, compare, complete} state;
+enum logic [4:0] {idle, start, memread, micloop, compare, complete} state;
 logic rcount;				// Read cycle counter
 logic [2:0] mnum;			// Microphone number
 logic [3:0] maxbnum;		// Beam corresponding to max power
@@ -42,6 +42,7 @@ assign rdaddr4 = maxbin;
 assign dladdr = 4*bnum + mnum;
 assign doa = -90 + 15*maxbnum;
 assign sigpwr = ssrealsq + ssimagsq;
+assign sspec[3:0] = {ramq4, ramq3, ramq2, ramq1};
 
 // Delay matrix preloaded into ROM
 delay_ROM drom (
@@ -85,7 +86,6 @@ angdisplay disp (
 
 always_ff @(posedge clk) begin
 	if (reset) begin
-		sspec[3:0] <= {ramq4, ramq3, ramq2, ramq1};
 		maxpwr <= 28'b0;
 		maxbnum <= 4'b0;
 		ssreal <= 32'b0;
@@ -98,12 +98,20 @@ always_ff @(posedge clk) begin
 	end else if (dladdr < 6'd52) begin
 		case (state)
 			idle: begin
-				if (detectdone && !done) state <= memread;
+				if (detectdone && !done) begin
+					state <= start;
+				end
 			end
-			memread: begin
-				if (rcount != 1) begin
-					rcount <= rcount + 1;
-				end else begin
+			start: begin	// Two cycle delay to allow ramq1 to update with maxbin
+				if (rcount != 1) rcount <= 1;
+				else begin
+					rcount <= 0;
+					state <= memread;
+				end
+			end
+			memread: begin	// Two cycle delay to read delay coefficients from ROM
+				if (rcount != 1) rcount <= 1;
+				else begin
 					rcount <= 0;
 					state <= micloop;
 				end
@@ -139,14 +147,13 @@ always_ff @(posedge clk) begin
 			complete: begin
 				done <= 0;
 				if (detectdone) begin
-					sspec[3:0] <= {ramq4, ramq3, ramq2, ramq1};
 					maxpwr <= 65'b0;
 					maxbnum <= 4'b0;
 					ssreal <= 32'b0;
 					ssimag <= 32'b0;
 					{mnum, bnum} <= 7'b0;
 					rcount <= 0;
-					state <= memread;
+					state <= start;
 				end
 			end
 		endcase;

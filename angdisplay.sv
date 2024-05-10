@@ -74,5 +74,5 @@ module angdisplay(input logic clk,
             endcase
         end
     end
- 
+
 endmodule

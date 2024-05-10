@@ -9,9 +9,7 @@ module freqweight_tb();
 
     // freqdetect logic
     logic fftdone;
-    logic [9:0] ramaddr;
     logic [9:0] maxbin;
-    logic [27:0] data;
 
     // weightblock signals
     logic done;
@@ -21,7 +19,7 @@ module freqweight_tb();
     FFT1_TESTRAM ram1 (
 	    .clock		(clk),
 		.rdaddress	(dut1.ramaddr),
-        .wren       (),
+        .wren       (0),
         .wraddress  (),
 		.data		(),
         .q          (dut1.ramq)
@@ -30,7 +28,7 @@ module freqweight_tb();
     FFT2_TESTRAM ram2 (
 	    .clock		(clk),
 		.rdaddress	(dut2.rdaddr2),
-        .wren       (),
+        .wren       (0),
         .wraddress  (),
 		.data		(),
         .q          (dut2.ramq2)
@@ -39,7 +37,7 @@ module freqweight_tb();
     FFT3_TESTRAM ram3 (
 	    .clock		(clk),
 		.rdaddress	(dut2.rdaddr3),
-        .wren       (),
+        .wren       (0),
         .wraddress  (),
 		.data		(),
         .q          (dut2.ramq3)
@@ -48,7 +46,7 @@ module freqweight_tb();
     FFT4_TESTRAM ram4 (
 	    .clock		(clk),
 		.rdaddress	(dut2.rdaddr4),
-        .wren       (),
+        .wren       (0),
         .wraddress  (),
 		.data		(),
         .q          (dut2.ramq4)
@@ -60,7 +58,7 @@ module freqweight_tb();
         .fftdone    (fftdone),
         .detectdone (dut2.detectdone),
         .ramq       (ram1.q),
-        .ramaddr    (ramaddr),
+        .ramaddr    (ram1.rdaddress),
         .maxbin     (maxbin)
     );
 
@@ -89,6 +87,7 @@ module freqweight_tb();
         reset = 1;
         fftdone = 0;
 
+        #100;
         reset = 0;
         #100;
         reset = 1;
@@ -98,8 +97,12 @@ module freqweight_tb();
         #20;
         fftdone = 0;
 
-        #300000;
-        // fftdone = 1;
+        #150000;
+        fftdone = 1;
+        #20;
+        fftdone = 0;
+
+        #150000;
 
         $stop;
     end
