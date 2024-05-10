@@ -76,7 +76,7 @@ realmult m2 (
 angdisplay disp (
 	.clk		(clk),
 	.wbdone		(done),
-    .KEY        ({3'b0, reset}),
+    .KEY        ({3'b0, KEY[0]}),
 	.angle		(doa),
 	.signdisp	(HEX2),
 	.disp1		(HEX1),
