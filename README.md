@@ -1,2 +1,3 @@
-This version ensures that FFT can run in the simulation.
-Note: FFT is licensed, so it can only generate time_limited.sof
+This version fixed some bugs in the fft_wrapper.sv and audio.sv
+
+Passed the FPGA test.
