@@ -1,0 +1,38 @@
+Info: Starting: Create block symbol file (.bsf)
+Info: qsys-generate /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw/fft_block.qsys --block-symbol-file --output-directory=/homes/user/stud/fall23/pw2593/4840-Embedded/project-hw/fft_block --family="Cyclone V" --part=5CSEMA5F31C6
+Progress: Loading project-hw/fft_block.qsys
+Progress: Reading input file
+Progress: Adding fft_ii_0 [altera_fft_ii 21.1]
+Progress: Parameterizing module fft_ii_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: fft_block.fft_ii_0: Radix-2 digit reverse implied
+Info: qsys-generate succeeded.
+Info: Finished: Create block symbol file (.bsf)
+Info: 
+Info: Starting: Create HDL design files for synthesis
+Info: qsys-generate /homes/user/stud/fall23/pw2593/4840-Embedded/project-hw/fft_block.qsys --synthesis=VERILOG --output-directory=/homes/user/stud/fall23/pw2593/4840-Embedded/project-hw/fft_block/synthesis --family="Cyclone V" --part=5CSEMA5F31C6
+Progress: Loading project-hw/fft_block.qsys
+Progress: Reading input file
+Progress: Adding fft_ii_0 [altera_fft_ii 21.1]
+Progress: Parameterizing module fft_ii_0
+Progress: Building connections
+Progress: Parameterizing connections
+Progress: Validating
+Progress: Done reading input file
+Info: fft_block.fft_ii_0: Radix-2 digit reverse implied
+Info: fft_block: Generating fft_block "fft_block" for QUARTUS_SYNTH
+Info: fft_ii_0: --- add file: fft_block_fft_ii_0_opt_twr2.hex
+Info: fft_ii_0: --- add file: fft_block_fft_ii_0_opt_twi3.hex
+Info: fft_ii_0: --- add file: fft_block_fft_ii_0_opt_twr3.hex
+Info: fft_ii_0: --- add file: fft_block_fft_ii_0_opt_twi4.hex
+Info: fft_ii_0: --- add file: fft_block_fft_ii_0_opt_twi1.hex
+Info: fft_ii_0: --- add file: fft_block_fft_ii_0_opt_twr4.hex
+Info: fft_ii_0: --- add file: fft_block_fft_ii_0_opt_twi2.hex
+Info: fft_ii_0: --- add file: fft_block_fft_ii_0_opt_twr1.hex
+Info: fft_ii_0: "fft_block" instantiated altera_fft_ii "fft_ii_0"
+Info: fft_block: Done "fft_block" with 2 modules, 50 files
+Info: qsys-generate succeeded.
+Info: Finished: Create HDL design files for synthesis

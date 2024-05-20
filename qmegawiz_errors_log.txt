@@ -1,0 +1,11 @@
+
+
+/homes/user/stud/fall23/pw2593/4840-Embedded/project-hw/pll_new.v
+
+May 13 05PM:43:52>: Megafunction PLL Intel FPGA IP v21.1 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted
+
+/homes/user/stud/fall23/pw2593/4840-Embedded/project-hw/pll_new.v
+
+May 13 05PM:44:04>: Megafunction PLL Intel FPGA IP v21.1 is not listed in any 
+wizard.lst file in the specified library path(s).Wizard launch aborted

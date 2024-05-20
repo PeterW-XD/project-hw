@@ -1,0 +1,25 @@
+
+State Machine - |soc_system_top|soc_system:soc_system0|soc_system_mm_interconnect_0:mm_interconnect_0|altera_merlin_burst_adapter:audio_0_avalon_slave_0_burst_adapter|altera_merlin_burst_adapter_13_1:altera_merlin_burst_adapter_13_1.burst_adapter|state
+Name state.ST_IDLE state.ST_UNCOMP_WR_SUBBURST state.ST_UNCOMP_TRANS state.ST_COMP_TRANS 
+state.ST_IDLE 0 0 0 0 
+state.ST_COMP_TRANS 1 0 0 1 
+state.ST_UNCOMP_TRANS 1 0 1 0 
+state.ST_UNCOMP_WR_SUBBURST 1 1 0 0 
+
+State Machine - |soc_system_top|soc_system:soc_system0|audio:audio_0|weightblock:wb_inst2|state
+Name state.complete state.compare state.micloop state.memread state.start state.idle 
+state.idle 0 0 0 0 0 0 
+state.start 0 0 0 0 1 1 
+state.memread 0 0 0 1 0 1 
+state.micloop 0 0 1 0 0 1 
+state.compare 0 1 0 0 0 1 
+state.complete 1 0 0 0 0 1 
+
+State Machine - |soc_system_top|soc_system:soc_system0|audio:audio_0|weightblock:wb_inst1|state
+Name state.complete state.compare state.micloop state.memread state.start state.idle 
+state.idle 0 0 0 0 0 0 
+state.start 0 0 0 0 1 1 
+state.memread 0 0 0 1 0 1 
+state.micloop 0 0 1 0 0 1 
+state.compare 0 1 0 0 0 1 
+state.complete 1 0 0 0 0 1 
