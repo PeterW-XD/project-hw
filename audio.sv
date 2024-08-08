@@ -15,8 +15,8 @@ module audio(
 	input logic [2:0] address,
 	input logic SD1,	// Serial data input: microphone set 1
 	input logic SD2,	// Set 2
-	input logic SD3,	// Reserved
-	input logic SD4,	// Reserved
+	input logic SD3,	// 
+	input logic SD4,	// 
 	input logic SCK,	// Sampling rate * 32 bits * 2 channels: 320
 	
 	output logic WS,	// Sampling rate
