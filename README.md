@@ -16,7 +16,7 @@
 A powerful 2-D sound localizer by Bartlett method of beamforming on DE1-SOC platform. The direction of arrival shows on a seven-segment display.
 
 ### Figures:
-<img src="./SoundLocalizerBlockDiagram.png" alt="image" width="300" height="auto">
+<img src="./SoundLocalizerBlockDiagram.png" alt="image" width="500" height="auto">
 
-<img src="./MicArrayNoted.png" alt="image" width="300" height="auto">
+<img src="./MicArrayNoted.png" alt="image" width="500" height="auto">
 
