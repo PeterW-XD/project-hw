@@ -12,6 +12,8 @@
 
 [Dawn](https://github.com/dawn-yoo)
 
+Elvis
+
 ### Introduction:
 A powerful 2-D sound localizer by Bartlett method of beamforming on DE1-SOC platform. The direction of arrival is shown on a seven-segment display.
 
