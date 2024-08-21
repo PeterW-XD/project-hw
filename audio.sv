@@ -1,13 +1,13 @@
 /* audio.sv
  * Top Module
- * Author: Sound Localizer
+ * Author: Sound Localizer Team
  * Notes:
  * 1. There is a startup time for mic.
- * 2. Contention across clock domains matters.
+ * 2. Need a buffer (FIFO) when signals cross clock domains.
  */ 
 module audio(	
-	input logic clk,	// 50M, 20ns
-	input logic reset,
+	input logic clk,				// 50M, 20ns
+	input logic reset,			
 	input logic chipselect,
 	input logic read,
 	input logic write,
@@ -20,7 +20,7 @@ module audio(
 	input logic SCK,	// Sampling rate * 32 bits * 2 channels: 320
 	
 	output logic WS,	// Sampling rate
-	output logic irq,	// Reserved
+	output logic irq,	// Reserved. We didn't use it
 	output logic [31:0] readdata,
 	// X
 	output logic [6:0] disp2,
@@ -33,37 +33,39 @@ module audio(
 
 	// VGA
 	output logic [7:0] VGA_R, VGA_G, VGA_B,
-	output logic 	   VGA_CLK, VGA_HS, VGA_VS,
+	output logic VGA_CLK, VGA_HS, VGA_VS,
 						VGA_BLANK_n,
 	output logic 	   VGA_SYNC_n
 );
-	
+// Initialize	
 logic rst_n = 0;
 logic sck_rst = 1;
 logic [3:0] count1 = 4'd0;
 logic [3:0] count2 = 4'd0;
-logic [5:0] clk_cnt;				// 64 counter to generate WS signal
-logic [4:0] stretch_cnt1, stretch_cnt2;		// Strech signal for synchro
-logic go, go_SCK;				// go command to start sampling and calculation
+logic [5:0] clk_cnt;	// 64 counter to generate WS signal
+logic [4:0] stretch_cnt1, stretch_cnt2;		// Strech signal for sync
+logic go, go_SCK;			// To start a new cycle of sampling and calculation. go_SCK sync with SCK clock.
 logic [23:0] right1, left1, right2, left2, right3, left3, right4, left4;  // Temp memory
-// RAM for raw data
-logic wrreq;							// write enable for raw data RAM
-logic [10:0] wr_addr;				// RAM write address
-logic [10:0] rd_addr;				// RAM read address
+
+// FIFO for raw data, aka the data directly from mic outputs
+logic wrreq;					// Write request (enable) for raw data FIFO
+logic [10:0] wr_addr;	// RAM write address
+logic [10:0] rd_addr;	// RAM read address
 logic [15:0] ram1_in, ram2_in, ram3_in, ram4_in, ram5_in, ram6_in, ram7_in, ram8_in; // RAM inputs
 logic [15:0] ram1q, ram2q, ram3q, ram4q, ram5q, ram6q, ram7q, ram8q;	// RAM outputs
-logic ready1, ready2, ready3, ready4, ready5, ready6, ready7, ready8;	// Asserted when raw data RAM is full
-logic rdreq1, rdreq2, rdreq3, rdreq4, rdreq5, rdreq6, rdreq7, rdreq8;
+logic ready1, ready2, ready3, ready4, ready5, ready6, ready7, ready8;	// Asserted when raw data FIFO is full
+logic rdreq1, rdreq2, rdreq3, rdreq4, rdreq5, rdreq6, rdreq7, rdreq8; // Read requests
+
 // FFT wrapper
-logic [27:0] ram1_fft, ram2_fft, ram3_fft, ram4_fft, ram5_fft, ram6_fft, ram7_fft, ram8_fft;// RAM outputs for fft RAM
+logic [27:0] ram1_fft, ram2_fft, ram3_fft, ram4_fft, ram5_fft, ram6_fft, ram7_fft, ram8_fft;// Outputs for fft RAM
 
 // Frequency detector
 logic fftdone, detectdone;
-logic [9:0] rd_addr_fd_x, maxbin_x;
+logic [9:0] rd_addr_fd_x, maxbin_x; // Read address of FFT RAM of x dimension & Max bin number.
 logic [9:0] rd_addr_fd_y, maxbin_y;
 
 // Weight block
-logic [9:0] rdaddr2_wb_x, rdaddr3_wb_x, rdaddr4_wb_x;
+logic [9:0] rdaddr2_wb_x, rdaddr3_wb_x, rdaddr4_wb_x; // Read address of FFT RAM, to extract correct bin 
 logic [9:0] rdaddr2_wb_y, rdaddr3_wb_y, rdaddr4_wb_y;
 logic wbdone, wbdone_SCK;
 logic [5:0] bnum_x, bnum_y;
